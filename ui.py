@@ -44,6 +44,10 @@ class QuizInterface:
         menubar.add_cascade(label="Help", menu=help_menu)
         self.window.config(menu=menubar)
 
+        self.question_count_label = tk.Label(text=f"Question 1/{self.quiz.num_questions}",
+                                             bg=THEME_COLOR, fg="white", justify="center")
+        self.question_count_label.grid(row=0, column=0, padx=20, pady=(0, 20))
+
         self.score_label = tk.Label(text="Score: 0", bg=THEME_COLOR, fg="white", justify="center")
         self.score_label.grid(row=0, column=1, padx=20, pady=(0, 20))
 
@@ -80,12 +84,17 @@ class QuizInterface:
             self.false_button.config(state="disabled")
         self.canvas.itemconfig(self.question_text, text=question)
         self.score_label.config(text=f"Score : {self.quiz.score}")
+        self.question_count_label.config(text=f"Question {self.quiz.question_number}/{self.quiz.num_questions}")
 
     def answer_true(self):
+        self.true_button.config(state="disabled")
+        self.false_button.config(state="disabled")
         check_result = self.quiz.check_answer("True")
         self.answer_feedback(check_result)
 
     def answer_false(self):
+        self.true_button.config(state="disabled")
+        self.false_button.config(state="disabled")
         check_result = self.quiz.check_answer("False")
         self.answer_feedback(check_result)
 
