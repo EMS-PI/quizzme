@@ -7,6 +7,7 @@ of questions."""
 import tkinter as tk
 from quiz_brain import QuizBrain
 from setup import SetupUI
+from tkinter import messagebox
 
 __author__ = "Ethem M Sözer"
 __copyright__ = "Copyright 2023, EMS_PI"
@@ -34,7 +35,7 @@ class QuizInterface:
         file_menu = tk.Menu(menubar, tearoff=0)
         file_menu.add_command(label="New...", command=self.setup_ui)
         file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.window.quit)
+        file_menu.add_command(label="Exit", command=self.on_closing)
         menubar.add_cascade(label="File", menu=file_menu)
 
         help_menu = tk.Menu(menubar, tearoff=0)
@@ -62,6 +63,8 @@ class QuizInterface:
         self.false_button.grid(row=2, column=1, padx=20, pady=(20, 0))
 
         self.next_question()
+
+        self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.window.mainloop()
 
     def next_question(self):
@@ -69,6 +72,8 @@ class QuizInterface:
             self.canvas.delete(self.feedback)
         if self.quiz.still_has_questions():
             question = self.quiz.next_question()
+            self.true_button.config(state="normal")
+            self.false_button.config(state="normal")
         else:
             question = "You have reached the end of the quiz!"
             self.true_button.config(state="disabled")
@@ -110,3 +115,7 @@ class QuizInterface:
         }
         self.quiz.setup(params)
         self.next_question()
+
+    def on_closing(self):
+        if tk.messagebox.askokcancel("Quit", "Do you want to quit?"):
+            self.window.destroy()
